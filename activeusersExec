@@ -1,0 +1,30 @@
+#!/bin/bash
+
+echo -e "[User]\t[Status]\t[Timestamp]\t[IP]\t[Country]";
+echo -e "\t";
+for line in $(prosodyctl mod_listusers | sort); do
+
+	userData=$(echo -e "$line: $(prosodyctl mod_lastlog $line | tr '\n' ' ')\b\n");
+	onlineStatus="Offline";
+	ip="x.x.x.x";
+
+	# Detect if offline user has been seen before
+	if [ $(echo -e $userData | grep -c "No record") == 0 ]; then
+		# User has been seen before
+		onlineUsers=$(prosodyctl mod_listusers --connected | cut -d '/' -f1 | sort);
+		if [ $(echo "$onlineUsers" | egrep -c $line) != 0 ]; then
+			# User must be online
+			onlineStatus="Online";
+		fi
+		# Detect last log time
+		lastLogin=$(echo -e $userData | egrep -o "[0-9]{4}.{15}");
+		ip=$(echo -e $userData | egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+");
+		country=$(geoiplookup $ip | egrep -o "[A-Z][A-Z], .+");
+	else
+		# User has never been seen before
+		lastLogin="9999-12-31 23:59:59";
+		ip="xxx.xxx.xxx.xxx";
+		country="XX, Unknown";
+	fi
+	echo -e "$line\t$onlineStatus\t$lastLogin\t$ip\t$country";
+done
