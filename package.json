@@ -1,0 +1,25 @@
+{
+  "name": "prosody-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "ip-regex": "^2.1.0",
+    "shell-escape": "^0.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kdex/prosody-tools.git"
+  },
+  "keywords": ["prosody"],
+  "author": "kdex",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/kdex/prosody-tools/issues"
+  },
+  "homepage": "https://github.com/kdex/prosody-tools#readme"
+}
