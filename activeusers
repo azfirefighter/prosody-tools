@@ -1,2 +1,0 @@
-#!/bin/bash
-./activeusersExec | sort -t $'\t' -k3n -k2r | column -t -s $'\t' | sed "s/9999-12-31 23:59:59/—————————– ————————/g";
