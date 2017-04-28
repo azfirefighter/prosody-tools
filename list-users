@@ -1,5 +1,5 @@
 #!/bin/node
-const ipRegex = require("ip-regex");
+const { v4, v6 } = require("ip-regex");
 const { execSync: exec } = require(`child_process`);
 const escape = require("shell-escape");
 const run = command => String(exec(`${command} && echo`));
@@ -10,15 +10,16 @@ for (const jid of users.trim().split("\n")) {
 		const data = run(lastLogCommand);
 		const singleLine = data.replace(/\n/g, " ");
 		const [dateString] = singleLine.match(/\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}/);
-		const [ip] = singleLine.match(ipRegex.v4());
+		const [ip] = singleLine.match(v4()) || singleLine.match(v6());
 		const date = new Date(dateString);
 		const isOnline = /login/.test(singleLine);
 		console.log(`${jid} (${isOnline ? "online" : "offline"})`);
 		console.log(`	Since: ${date}`);
 		console.log(`	IP: ${ip}`);
-		console.log(run(`geoiplookup ${ip}`).replace(/^/gm, "	"));
+		console.log(run(`geoiplookup${ip.match(v6()) ? "6" : ""} ${ip}`).replace(/^/gm, "	"));
 	}
 	catch (e) {
 		/* Probably errors about bitop */
+		console.log(e);
 	}
 }
